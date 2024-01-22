@@ -1,14 +1,16 @@
+// API key for OpenWeatherMap
 const API_key = "7b11b94c0ce3383e9a3fbe2fac8c135c";
+// Select DOM elements
 const searchInput = document.querySelector("#search-input");
 const history = document.getElementById("history");
 const today = document.getElementById("today");
 const forecast = document.getElementById("forecast");
 const searchForm = document.getElementById("search-form");
-
+// Initialize search history array and populate it from localStorage
 let searchHistory = JSON.parse(localStorage.getItem("search")) || [];
 
 function startPage() {
-
+// Function to fetch and display weather data for a given city
     function getWeather(cityName) {
         const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${API_key}`;
 
@@ -33,6 +35,7 @@ function startPage() {
                 console.error("Error fetching weather data:", error);
             });
     }
+    // Function to display the current weather
     function displayCurrentWeather(data) {
         today.innerHTML = ""; // Clear previous content
         today.classList.remove("hidden");
@@ -55,6 +58,7 @@ function startPage() {
 
         today.innerHTML = currentWeatherHTML;
     }
+    // Function to display the 5-day forecast
     function displayFiveDayForecast(data) {
         forecast.innerHTML = ""; // Clear previous content
         forecast.classList.remove("hidden");
@@ -80,11 +84,12 @@ function startPage() {
             forecast.innerHTML += forecastHTML;
         }
     }
+    // Clear input field, hide weather data, and reset form
     today.classList.add("hidden");
     forecast.classList.add("hidden");
   searchForm.reset();
 
-
+// Event listener for form submission
     searchForm.addEventListener("submit", function (event) {
         event.preventDefault();
         const cityName = searchInput.value.trim();
@@ -100,12 +105,14 @@ function startPage() {
             renderSearchHistory();
         }
     });
+    // Event listener for clicking on search history items
     history.addEventListener("click", function (event) {
         if (event.target.classList.contains("history")) {
             const cityName = event.target.textContent;
             getWeather(cityName);
         }
     });
+    // Event listener for clicking on the "clear" button
     history.addEventListener("click", function (event) {
         if (event.target.innerText === "clear") {
             searchHistory = [];
@@ -118,6 +125,7 @@ function startPage() {
             renderSearchHistory();
         }
     });
+    // Function to render the search history
     function renderSearchHistory() {
         history.innerHTML = ""; // Clear previous content
     
@@ -142,4 +150,5 @@ function startPage() {
 
 
 }
+// Call the startPage function to initialize the application
 startPage();
